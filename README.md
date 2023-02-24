@@ -5,6 +5,8 @@
 - Move files to preconfigured Directories
 
 # ToDo
+- [x] Date filter
+- [x] Single instance
 - [ ] E-Mail fetcher
 - [ ] Nextcloud webdav integration
 - [ ] Nextcloud notification api intigration

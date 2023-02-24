@@ -3,10 +3,12 @@ import re
 import os
 import ocrmypdf
 import dateparser
-import datetime
-from enum import Enum
 import Logger
 import Settings
+from tendo import singleton
+
+# Check if another instance is already running
+me = singleton.SingleInstance() # will sys.exit(-1) if other instance is running
 
 DATE_REGEX = re.compile(
     r"(\b|(?!=([_-])))([0-9]{1,2})[\.\/-]([0-9]{1,2})[\.\/-]([0-9]{4}|[0-9]{2})(\b|(?=([_-])))|"  # noqa: E501
@@ -27,15 +29,19 @@ def matches(tags, text):
         else:
             Logger.Log('Gefundender Tag: '+ tag, Logger.LogLevel.Debug)    
             found = True  
-    Logger.Log(found, Logger.LogLevel.Debug)
+    Logger.Log(str(found), Logger.LogLevel.Debug)
     return found
 
 def getDate(text,pdfFile):
     Logger.Log("Get Date", Logger.LogLevel.Debug)
     if len(text) > 0:
         for m in re.finditer(DATE_REGEX, text):
-                date = dateparser.parse(m.group(0))
-                if date is not None:
+                date = dateparser.parse(m.group(0), settings={'PREFER_DAY_OF_MONTH': 'first', 'DATE_ORDER': 'DMY'})
+                if (
+                    date is not None
+                    and date.year > 1900
+                    and date not in Settings.IGNORE_DATES
+                ):
                     Logger.Log("Found date in Text", Logger.LogLevel.Debug)
                     return date.strftime("%Y-%m-%d")
 
@@ -48,14 +54,14 @@ def getDate(text,pdfFile):
 
 Logger.Log("Debug log is selected", Logger.LogLevel.Debug)
 Logger.Log("---- Begin Settings ----", Logger.LogLevel.Debug)
-Logger.log ("NEXTCLOUDDIR: " + Settings.NEXTCLOUDDIR, Logger.LogLevel.Debug)  
-Logger.log ("SOURCEDIR: " + Settings.SOURCEDIR, Logger.LogLevel.Debug)  
-Logger.log ("DESTDIR: " + Settings.DESTDIR, Logger.LogLevel.Debug)
+Logger.Log ("NEXTCLOUDDIR: " + Settings.NEXTCLOUDROOT, Logger.LogLevel.Debug)  
+Logger.Log ("SOURCEDIR: " + Settings.SOURCEDIR, Logger.LogLevel.Debug)  
+Logger.Log ("DESTDIR: " + Settings.DESTDIR, Logger.LogLevel.Debug)
 Logger.Log("---- End Settings ----", Logger.LogLevel.Debug)
 
 Logger.Log("---- Start ----", Logger.LogLevel.Info)
-for sourceFilename in os.listdir(Settings.NEXTCLOUDDIR + Settings.SOURCEDIR):
-    sourceFilePath = os.path.join(Settings.NEXTCLOUDDIR + Settings.SOURCEDIR, sourceFilename)
+for sourceFilename in os.listdir(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR):
+    sourceFilePath = os.path.join(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR, sourceFilename)
     # checking if it is a file
     if not os.path.isfile(sourceFilePath) or not sourceFilename.endswith(".pdf"):# or filename.startswith("["): 
         continue
@@ -66,7 +72,7 @@ for sourceFilename in os.listdir(Settings.NEXTCLOUDDIR + Settings.SOURCEDIR):
     reader = PdfReader(sourceFilePath)
     number_of_pages = len(reader.pages)
 
-    Logger.Log("Number of Pages: " + number_of_pages, Logger.LogLevel.Debug)
+    Logger.Log("Number of Pages: " + str(number_of_pages), Logger.LogLevel.Debug)
 
     # Extrahieren des Texts aus der PDF-Datei
     text = ''
@@ -84,7 +90,7 @@ for sourceFilename in os.listdir(Settings.NEXTCLOUDDIR + Settings.SOURCEDIR):
     fileDate = getDate(text,reader)
     Logger.Log("File date: " + fileDate, Logger.LogLevel.Debug)
     
-    Logger.Log("Find destdir" + fileDate, Logger.LogLevel.Debug)
+    Logger.Log("Find destdir", Logger.LogLevel.Debug)
     currDestDir = Settings.DESTDIR  
     for path in Settings.SEARCHANDPATH:  
         tags = Settings.SEARCHANDPATH[path]  
@@ -92,9 +98,11 @@ for sourceFilename in os.listdir(Settings.NEXTCLOUDDIR + Settings.SOURCEDIR):
             currDestDir = path
 
     #build destination path
-    destFilePath = Settings.NEXTCLOUDDIR + currDestDir + "/[" + fileDate + "]" + sourceFilename
+    destFilePath = Settings.NEXTCLOUDROOT + currDestDir + "/[" + fileDate + "]" + sourceFilename
     Logger.Log("DestFilePath: " + destFilePath, Logger.LogLevel.Debug)
-
-    Logger.Log("Move: " + sourceFilePath + " to: " + destFilePath, Logger.LogLevel.Info)
-    os.rename(sourceFilePath, destFilePath)
-    Logger.Log("---- End ----", Logger.LogLevel.Info)
+    Logger.Log("Move: " + sourceFilename + " to: " + destFilePath, Logger.LogLevel.Info)
+    try:
+        pass#os.rename(sourceFilePath, destFilePath)
+    except OSError as error:
+        Logger.Log(str(error), Logger.LogLevel.Error)
+Logger.Log("---- End ----", Logger.LogLevel.Info)

@@ -1,12 +1,13 @@
+import datetime
 #    Info = 1
 #    Warning = 2
 #    Error = 3
 #    Debug = 4
-LOGLEVEL = 1
+LOGLEVEL = 3
 
-NEXTCLOUDDIR =  "/home/tim/Downloads/" #"/mnt/nextcloudSync/"  
-SOURCEDIR = "Inbox"  
-DESTDIR = SOURCEDIR
+NEXTCLOUDROOT =  "/home/tim/Downloads/Nextcloud/" #"/mnt/nextcloudSync/"  
+SOURCEDIR = "Inbox/consume"  
+DESTDIR = "Inbox"
 
 SEARCHANDPATH =	{  
   "Dokumente/Hetzner/": ["Hetzner", "Rechnung"],  
@@ -14,4 +15,10 @@ SEARCHANDPATH =	{
   "Emma/PKV/Leistungsabrechnung": ["AK-9447498434","Abrechnung","Leistungsauftrag","AMP90PU"],  
   "Dokumente/Klarmobil/Rechnung" : ["klarmobil", "Vertragsabrechnungen"],  
   "Dokumente/Verdienstabrechnung/2023" : ["S-Payment", "Verdienstabrechnung", "2023"] 
+}
+
+IGNORE_DATES = {
+    datetime.datetime(1989, 12, 20),
+    datetime.datetime(1989, 10, 8),
+    datetime.datetime(2021, 5, 21)
 }
