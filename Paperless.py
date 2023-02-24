@@ -6,12 +6,7 @@ import dateparser
 import datetime
 from enum import Enum
 import Logger
-
-LOGLEVEL = Logger.LogLevel.Info
-
-NEXTCLOUDDIR =  "/home/tim/Downloads/" #"/mnt/nextcloudSync/"  
-SOURCEDIR = "Inbox"  
-DESTDIR = SOURCEDIR
+import Settings
 
 DATE_REGEX = re.compile(
     r"(\b|(?!=([_-])))([0-9]{1,2})[\.\/-]([0-9]{1,2})[\.\/-]([0-9]{4}|[0-9]{2})(\b|(?=([_-])))|"  # noqa: E501
@@ -21,13 +16,6 @@ DATE_REGEX = re.compile(
     r"(\b|(?!=([_-])))([^\W\d_]{3,9} [0-9]{4})(\b|(?=([_-])))|"
     r"(\b|(?!=([_-])))(\b[0-9]{1,2}[ \.\/-][A-Z]{3}[ \.\/-][0-9]{4})(\b|(?=([_-])))",  # noqa: E501
 )
-
-SEARCHANDPATH =	{  
-  "Dokumente/Hetzner/": ["Hetzner", "Rechnung"],  
-  "Dokumente/Allianz/Private Krankenversicherung/Leistungsabrechnung": ["AK-9447498434","Abrechnung","Leistungsauftrag","AMP100UV"],  
-  "Emma/PKV/Leistungsabrechnung": ["AK-9447498434","Abrechnung","Leistungsauftrag","AMP90PU"],  
-  "Dokumente/Klarmobil/Rechnung" : ["klarmobil", "Vertragsabrechnungen"]  
-}
 
 def matches(tags, text):  
     found = False  
@@ -60,14 +48,14 @@ def getDate(text,pdfFile):
 
 Logger.Log("Debug log is selected", Logger.LogLevel.Debug)
 Logger.Log("---- Begin Settings ----", Logger.LogLevel.Debug)
-Logger.log ("NEXTCLOUDDIR: " + NEXTCLOUDDIR, Logger.LogLevel.Debug)  
-Logger.log ("SOURCEDIR: " + SOURCEDIR, Logger.LogLevel.Debug)  
-Logger.log ("DESTDIR: " + DESTDIR, Logger.LogLevel.Debug)
+Logger.log ("NEXTCLOUDDIR: " + Settings.NEXTCLOUDDIR, Logger.LogLevel.Debug)  
+Logger.log ("SOURCEDIR: " + Settings.SOURCEDIR, Logger.LogLevel.Debug)  
+Logger.log ("DESTDIR: " + Settings.DESTDIR, Logger.LogLevel.Debug)
 Logger.Log("---- End Settings ----", Logger.LogLevel.Debug)
 
 Logger.Log("---- Start ----", Logger.LogLevel.Info)
-for sourceFilename in os.listdir(NEXTCLOUDDIR + SOURCEDIR):
-    sourceFilePath = os.path.join(NEXTCLOUDDIR + SOURCEDIR, sourceFilename)
+for sourceFilename in os.listdir(Settings.NEXTCLOUDDIR + Settings.SOURCEDIR):
+    sourceFilePath = os.path.join(Settings.NEXTCLOUDDIR + Settings.SOURCEDIR, sourceFilename)
     # checking if it is a file
     if not os.path.isfile(sourceFilePath) or not sourceFilename.endswith(".pdf"):# or filename.startswith("["): 
         continue
@@ -97,14 +85,14 @@ for sourceFilename in os.listdir(NEXTCLOUDDIR + SOURCEDIR):
     Logger.Log("File date: " + fileDate, Logger.LogLevel.Debug)
     
     Logger.Log("Find destdir" + fileDate, Logger.LogLevel.Debug)
-    currDestDir = DESTDIR  
-    for path in SEARCHANDPATH:  
-        tags = SEARCHANDPATH[path]  
+    currDestDir = Settings.DESTDIR  
+    for path in Settings.SEARCHANDPATH:  
+        tags = Settings.SEARCHANDPATH[path]  
         if matches(tags, text):  
             currDestDir = path
 
     #build destination path
-    destFilePath = NEXTCLOUDDIR + currDestDir + "/[" + fileDate + "]" + sourceFilename
+    destFilePath = Settings.NEXTCLOUDDIR + currDestDir + "/[" + fileDate + "]" + sourceFilename
     Logger.Log("DestFilePath: " + destFilePath, Logger.LogLevel.Debug)
 
     Logger.Log("Move: " + sourceFilePath + " to: " + destFilePath, Logger.LogLevel.Info)

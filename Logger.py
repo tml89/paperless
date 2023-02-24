@@ -1,4 +1,5 @@
 import datetime
+import Settings
 from enum import Enum
 
 class LogLevel(Enum):
@@ -7,10 +8,8 @@ class LogLevel(Enum):
     Error = 3
     Debug = 4
     
-LOGLEVEL = LogLevel.Info
-
 def Log(text, logLevel: LogLevel  = LogLevel.Info):
     now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    if logLevel.value > LOGLEVEL.value:
+    if logLevel.value > Settings.LOGLEVEL:
         return
     print (now + "\t"+ logLevel.name + "\t" + text)
