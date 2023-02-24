@@ -1,10 +1,10 @@
-#Paperless
+# Paperless
 
-OCR Files
-Add Date of files (in file oder create date) as prefix
-Move files to preconfigured Directories
+- OCR pdf file 
+- Add Date of file (in text oder creation date) as prefix
+- Move files to preconfigured Directories
 
-#ToDo
+# ToDo
 - [ ] E-Mail fetcher
 - [ ] Nextcloud webdav integration
 - [ ] Nextcloud notification api intigration
