@@ -66,7 +66,7 @@ for sourceFilename in os.listdir(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR):
     if not os.path.isfile(sourceFilePath) or not sourceFilename.endswith(".pdf"):# or filename.startswith("["): 
         continue
     
-    Logger.Log("Read File: " + sourceFilename, Logger.LogLevel.Debug)
+    Logger.Log("Process File: " + sourceFilename, Logger.LogLevel.Info)
 
     # Öffnen der PDF-Datei
     reader = PdfReader(sourceFilePath)
