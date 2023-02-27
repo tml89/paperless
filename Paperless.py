@@ -8,6 +8,7 @@ import datetime
 import Logger
 import Settings
 import pikepdf
+import NextcloudNotification as notify
 from tendo import singleton
 
 # Check if another instance is already running
@@ -53,7 +54,7 @@ def post_process_text(text):
     # TODO: this needs a rework
     # replace \0 prevents issues with saving to postgres.
     # text may contain \0 when this character is present in PDF files.
-    return no_trailing_whitespace.strip().replace("\0", " ")
+    return no_trailing_whitespace.strip()
 
 def matches(tags, text):  
     found = False  
@@ -102,7 +103,7 @@ Logger.Log("---- Start ----", Logger.LogLevel.Info)
 for sourceFilename in os.listdir(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR):
     sourceFilePath = os.path.join(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR, sourceFilename)
     # checking if it is a file
-    if not os.path.isfile(sourceFilePath) or not sourceFilename.lower().endswith(".pdf") or sourceFilename.startswith("["): 
+    if not os.path.isfile(sourceFilePath) or not sourceFilename.lower().endswith(".pdf"):# or sourceFilename.startswith("["): 
         continue
     
     Logger.Log("Process File: " + sourceFilename, Logger.LogLevel.Info)
@@ -128,12 +129,15 @@ for sourceFilename in os.listdir(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR):
         if matches(tags, text):  
             currDestDir = path
 
+    if currDestDir != Settings.DESTDIR :
+        notify.SendNotification("Paperless, verschiebe Datei: " + sourceFilename, "Nach: " + currDestDir, "tim") 
+
     #build destination path
     destFilePath = Settings.NEXTCLOUDROOT + currDestDir + "/[" + fileDate + "]" + sourceFilename
     Logger.Log("DestFilePath: " + destFilePath, Logger.LogLevel.Debug)
     Logger.Log("Move: " + sourceFilename + " to: " + destFilePath, Logger.LogLevel.Info)
     try:
-        os.rename(sourceFilePath, destFilePath)
+        pass#os.rename(sourceFilePath, destFilePath)
     except OSError as error:
         Logger.Log(str(error), Logger.LogLevel.Error)
 Logger.Log("---- End ----", Logger.LogLevel.Info)
