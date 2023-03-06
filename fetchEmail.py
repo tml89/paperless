@@ -17,7 +17,7 @@ def fetchMail():
             for att in msg.attachments:
                 if not att.content_type.lower().endswith("pdf"):
                     continue
-                Logger.Log("Save Attachment: " + att.filename + " from: " + msg.fr,
+                Logger.Log("Save Attachment: " + att.filename + " from: " + msg.from_,
                            Logger.LogLevel.Info)
                 with open(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR + "/" + att.filename, 'wb') as f:
                     f.write(att.payload)
