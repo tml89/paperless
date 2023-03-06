@@ -1,12 +1,7 @@
 import datetime
 import os
 from dotenv import load_dotenv, find_dotenv
-
 load_dotenv(find_dotenv())
-
-NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL')
-NEXTCLOUD_USERNAME = os.getenv('NEXTCLOUD_USERNAME')
-NEXTCLOUD_PASSWORD = os.getenv('NEXTCLOUD_PASSWORD')
 
 #    Info = 1
 #    Warning = 2
@@ -14,10 +9,24 @@ NEXTCLOUD_PASSWORD = os.getenv('NEXTCLOUD_PASSWORD')
 #    Debug = 4
 LOGLEVEL = 3
 
+# Nextcloud Notification settings
+NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL')
+NEXTCLOUD_USERNAME = os.getenv('NEXTCLOUD_USERNAME')
+NEXTCLOUD_PASSWORD = os.getenv('NEXTCLOUD_PASSWORD')
+
+# E-Mail fetcher settings
+EMAIL = os.environ.get('EMAIL')
+EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
+IMAP_URL = "192.168.178.5"
+IMAP_PORT = 1143
+FETCHED_TAG = "Fetched"
+
+# Folder settings
 NEXTCLOUDROOT =  "/mnt/nextcloudSync/"  
 SOURCEDIR = "Inbox"  
 DESTDIR = "Inbox"
 
+# Tags and Folder
 SEARCHANDPATH =	{  
   "Dokumente/Hetzner/": ["Hetzner", "Rechnung"],  
   "Dokumente/Allianz/Private Krankenversicherung/Leistungsabrechnung": ["AK-9447498434","Abrechnung","Leistungsauftrag","AMP100UV"],  

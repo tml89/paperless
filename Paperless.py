@@ -103,7 +103,7 @@ Logger.Log("---- Start ----", Logger.LogLevel.Info)
 for sourceFilename in os.listdir(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR):
     sourceFilePath = os.path.join(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR, sourceFilename)
     # checking if it is a file
-    if not os.path.isfile(sourceFilePath) or not sourceFilename.lower().endswith(".pdf"):# or sourceFilename.startswith("["): 
+    if not os.path.isfile(sourceFilePath) or not sourceFilename.lower().endswith(".pdf") or sourceFilename.startswith("["): 
         continue
     
     Logger.Log("Process File: " + sourceFilename, Logger.LogLevel.Info)

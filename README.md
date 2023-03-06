@@ -9,7 +9,7 @@
 - [x] Single instance
 - [ ] E-Mail fetcher
 - [ ] Nextcloud webdav integration
-- [ ] Nextcloud notification api intigration
+- [x] Nextcloud notification api intigration
 - [ ] Dynamic tags in SearchAndFolder (e.g. year in path / search string)
 - [ ] Better SearchAndFolder strucutre
 - [ ] ocrmypdf logging improvements
