@@ -97,7 +97,7 @@ def getDate(text, pdfFile):
     pdf_info = pdf.docinfo
     creation_date_raw = pdf_info.get('/CreationDate')
     creation_date = datetime.datetime.strptime(
-        str(creation_date_raw), "D:%Y%m%d%H%M%S%z00'00'")
+        str(creation_date_raw).replace("'", ""), "D:%Y%m%d%H%M%S%z")
     return creation_date.strftime("%Y-%m-%d")
 
 # ----------------------
