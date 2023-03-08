@@ -1,6 +1,6 @@
 import Settings
 import Logger
-from imap_tools import MailBoxUnencrypted, A, MailMessageFlags
+from imap_tools import MailBoxUnencrypted, A
 
 
 def fetchMail():
@@ -17,9 +17,10 @@ def fetchMail():
             for att in msg.attachments:
                 if not att.content_type.lower().endswith("pdf"):
                     continue
-                Logger.Log("Save Attachment: " + att.filename + " from: " + msg.from_,
+                filename = att.filename.replace("\r\n", "")
+                Logger.Log("Save Attachment: " + filename + " from: " + msg.from_,
                            Logger.LogLevel.Info)
-                with open(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR + "/" + att.filename, 'wb') as f:
+                with open(Settings.NEXTCLOUDROOT + Settings.SOURCEDIR + "/" + filename, 'wb') as f:
                     f.write(att.payload)
                     mailbox.flag(msg.uid, flags, True)
                     f.close()
