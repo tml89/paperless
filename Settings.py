@@ -7,7 +7,7 @@ load_dotenv(find_dotenv())
 #    Warning = 2
 #    Error = 3
 #    Debug = 4
-LOGLEVEL = 3
+LOGLEVEL = 1
 
 # Nextcloud Notification settings
 NEXTCLOUD_URL = os.environ.get('NEXTCLOUD_URL')
@@ -20,6 +20,14 @@ EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 IMAP_URL = "192.168.178.5"
 IMAP_PORT = 1143
 FETCHED_TAG = "Fetched"
+
+# Regex filter for files which should not save
+FILEFILTE = {".*AGB.*.pdf",
+             "Verbraucherinformationen.pdf",
+             "Maklervertrag und Verbraucherinformationen.pdf",
+             ".*Datenschutzhinweise.*",
+             ".*Datenschutzvereinbarungen.*",
+             ".*Allgemeine Geschäftsbedingungen.*"}
 
 # Folder settings
 NEXTCLOUDROOT = "/mnt/nextcloudSync/"

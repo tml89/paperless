@@ -9,7 +9,7 @@
 - [x] Single instance
 - [x] E-Mail fetcher (only unencrypted)
 - [ ] E-Mail sender filter
-- [ ] E-Mail file filter   
+- [x] E-Mail file filter   
 - [ ] Nextcloud webdav integration
 - [x] Nextcloud notification api intigration
 - [ ] Dynamic tags in SearchAndFolder (e.g. year in path / search string)
